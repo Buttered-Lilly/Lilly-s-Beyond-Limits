@@ -103,7 +103,7 @@ namespace Lilly_s_Beyond_Limits
                 try
                 {
                     Core.instance.profile = ProfileDataManager._current._characterFile._appearanceProfile;
-                    MelonLogger.Msg(Core.instance.profile._boobWeight);
+                    //MelonLogger.Msg(Core.instance.profile._boobWeight);
                 }
                 catch (Exception e)
                 {
@@ -150,40 +150,32 @@ namespace Lilly_s_Beyond_Limits
         {
             try
             {
-                int found = 0;
-                foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+                foreach (PlayerRaceModel go in Resources.FindObjectsOfTypeAll(typeof(PlayerRaceModel)) as PlayerRaceModel[])
                 {
-                    //MelonLogger.Msg(go.name);
-                    if (found == 5)
-                        return;
-                    else if (go.name.Contains("raceModel"))
-                    {
-                        found++;
-                        var param = go.GetComponent<PlayerRaceModel>()._scriptablePlayerRace._raceDisplayParams;
-                        maxSizes[0] = new Vector2(param._headWidthRange.x, param._headWidthRange.y * 5);
-                        maxSizes[1] = new Vector2(param._headModRange.x, param._headModRange.y * 5);
-                        maxSizes[2] = new Vector2(param._heightRange.x, param._heightRange.y * 5);
-                        maxSizes[3] = new Vector2(param._widthRange.x, param._widthRange.y * 5);
-                        maxSizes[4] = new Vector2(param._torsoRange.x, param._torsoRange.y * 5);
-                        maxSizes[5] = new Vector2(param._boobRange.x, param._boobRange.y * 5);
-                        maxSizes[6] = new Vector2(param._armRange.x, param._armRange.y * 5);
-                        maxSizes[7] = new Vector2(param._bellyRange.x, param._bellyRange.y * 5);
-                        maxSizes[8] = new Vector2(param._bottomRange.x, param._bottomRange.y * 5);
-                        maxSizes[9] = new Vector2(param._pitchRange.x * 2, param._pitchRange.y * 2);
+                    var param = go._scriptablePlayerRace._raceDisplayParams;
+                    maxSizes[0] = new Vector2(param._headWidthRange.x, param._headWidthRange.y * 5);
+                    maxSizes[1] = new Vector2(param._headModRange.x, param._headModRange.y * 5);
+                    maxSizes[2] = new Vector2(param._heightRange.x, param._heightRange.y * 5);
+                    maxSizes[3] = new Vector2(param._widthRange.x, param._widthRange.y * 5);
+                    maxSizes[4] = new Vector2(param._torsoRange.x, param._torsoRange.y * 5);
+                    maxSizes[5] = new Vector2(param._boobRange.x, param._boobRange.y * 5);
+                    maxSizes[6] = new Vector2(param._armRange.x, param._armRange.y * 5);
+                    maxSizes[7] = new Vector2(param._bellyRange.x, param._bellyRange.y * 5);
+                    maxSizes[8] = new Vector2(param._bottomRange.x, param._bottomRange.y * 5);
+                    maxSizes[9] = new Vector2(param._pitchRange.x * 2, param._pitchRange.y * 2);
 
 
-                        param._headWidthRange.y = param._headWidthRange.y * 5;
-                        param._headModRange.y = param._headModRange.y * 5;
-                        param._heightRange.y = param._heightRange.y * 5;
-                        param._widthRange.y = param._widthRange.y * 5;
-                        param._torsoRange.y = param._torsoRange.y * 5;
-                        param._boobRange.y = param._boobRange.y * 5;
-                        param._armRange.y = param._armRange.y * 5;
-                        param._bellyRange.y = param._bellyRange.y * 5;
-                        param._bottomRange.y = param._bottomRange.y * 5;
-                        param._pitchRange.y = param._pitchRange.y * 2;
-                        param._pitchRange.x = param._pitchRange.x * 2;
-                    }
+                    param._headWidthRange.y = param._headWidthRange.y * 5;
+                    param._headModRange.y = param._headModRange.y * 5;
+                    param._heightRange.y = param._heightRange.y * 5;
+                    param._widthRange.y = param._widthRange.y * 5;
+                    param._torsoRange.y = param._torsoRange.y * 5;
+                    param._boobRange.y = param._boobRange.y * 5;
+                    param._armRange.y = param._armRange.y * 5;
+                    param._bellyRange.y = param._bellyRange.y * 5;
+                    param._bottomRange.y = param._bottomRange.y * 5;
+                    param._pitchRange.y = param._pitchRange.y * 2;
+                    param._pitchRange.x = param._pitchRange.x * 2;
                 }
             }
             catch (Exception e)
