@@ -4,13 +4,14 @@ using UnityEngine;
 using System.Collections;
 using static MelonLoader.MelonLogger;
 
-[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.Core), "Lilly's Beyond Limits", "1.0.0", "brand", null)]
+[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.Core), "Lilly's Beyond Limits", "1.0.0", "Lilly", null)]
 [assembly: MelonGame("KisSoft", "ATLYSS")]
 
 namespace Lilly_s_Beyond_Limits
 {
     public class Core : MelonMod
     {
+
         public Vector2[] maxSizes = new Vector2[10];
 
         static Core instance;
@@ -18,6 +19,81 @@ namespace Lilly_s_Beyond_Limits
         public PlayerAppearance_Profile profile;
         public PlayerAppearanceStruct playerapp;
         public bool fix = false;
+
+        [HarmonyPatch(typeof(ChatBehaviour), "Cmd_SendChatMessage")]
+        public static class chatCommands
+        {
+            private static bool Prefix(ref ChatBehaviour __instance,  ref string _message)
+            {
+                try
+                {
+                    _message = _message.ToLower();
+                    MelonLogger.Msg(_message);
+                    if (_message.StartsWith("/size"))
+                    {
+                        PlayerAppearanceStruct playerapp = Core.instance.playerVis._playerAppearanceStruct;
+                        PlayerAppearance_Profile _aP = Core.instance.profile;
+
+                        string[] Parts;
+                        Parts = _message.Split(" ");
+                        //_message = "<>/";
+                        float value;
+                        float.TryParse(Parts[2], out value);
+                        if (Parts[1] == "boobs")
+                        {
+                            playerapp._boobWeight = value;
+                        }
+                        else if(Parts[1] == "height")
+                        {
+                            playerapp._heightWeight = value;
+                        }
+                        else if(Parts[1] == "head")
+                        {
+                            playerapp._headWidth = value;
+                        }
+                        else if(Parts[1] == "width")
+                        {
+                            playerapp._widthWeight = value;
+                        }
+                        else if(Parts[1] == "butt")
+                        {
+                            playerapp._bottomWeight = value;
+                        }
+                        else if(Parts[1] == "belly")
+                        {
+                            playerapp._bellyWeight = value;
+                        }
+                        else if(Parts[1] == "muzzle")
+                        {
+                            playerapp._muzzleWeight = value;
+                        }
+                        else if (Parts[1] == "voice")
+                        {
+                            playerapp._voicePitch = value;
+                        }
+                        else if (Parts[1] == "torso")
+                        {
+                            playerapp._torsoWeight = value;
+                        }
+                        else if (Parts[1] == "arms")
+                        {
+                            playerapp._armWeight = value;
+                        }
+                        MelonLogger.Msg(_message);
+                        Core.instance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
+                        ProfileDataManager._current.Save_ProfileData();
+                        return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                    //_message = "<>/";
+                    return false;
+                }
+                return true;
+            }
+        }
 
         [HarmonyPatch(typeof(GameManager), "Start")]
         public static class gamemanager
@@ -119,6 +195,8 @@ namespace Lilly_s_Beyond_Limits
             {
                 try
                 {
+                    if (!__instance.isLocalPlayer)
+                        return true;
                     var param = __instance._playerRaceModel._scriptablePlayerRace._raceDisplayParams;
                     Core.instance.playerVis = __instance;
                     param._headWidthRange = Core.instance.maxSizes[0];
