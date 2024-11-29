@@ -94,9 +94,9 @@ namespace Lilly_s_Beyond_Limits
                         else if (Parts[1] == "arms")
                         {
                             playerapp._armWeight = value;
-                            playerapp._armWeight = value;
+                            _aP._armWeight = value;
                         }
-                        MelonLogger.Msg(_message);
+                        //MelonLogger.Msg(_message);
                         Core.instance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
                         ProfileDataManager._current._characterFile._appearanceProfile = _aP;
                         ProfileDataManager._current.Init_SaveRoutine();
