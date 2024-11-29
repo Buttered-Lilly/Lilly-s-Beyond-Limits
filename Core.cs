@@ -230,15 +230,22 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CameraCollision), "<LateUpdate>g__Handle_DistanceControl|13_0")]
         public static class setMaxCamDis
         {
-            private static void Postfix(ref CameraCollision __instance)
+            private static bool Prefix(ref CameraCollision __instance)
             {
                 try
                 {
+                    float axis = Input.GetAxis("Mouse ScrollWheel");
+                    if (axis != 0f || !Player._mainPlayer._bufferingStatus || !Player._mainPlayer._inChat || !Player._mainPlayer._inUI)
+                    {
+                        __instance.maxDistance += axis * (35.5f + MathF.Abs(Core.instance.camDis));
+                    }
                     Core.instance.camDis = __instance.maxDistance;
+                    return false;
                 }
                 catch (Exception e)
                 {
                     MelonLogger.Msg(e);
+                    return true;
                 }
             }
         }
