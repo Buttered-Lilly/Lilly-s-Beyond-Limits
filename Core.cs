@@ -39,9 +39,14 @@ namespace Lilly_s_Beyond_Limits
                         //_message = "<>/";
                         float value;
                         float.TryParse(Parts[2], out value);
-                        if (Parts[1] == "boobs")
+                        if (Parts[1] == "boobs" || Parts[1] == "tits" || Parts[1] == "boob" || Parts[1] == "tit")
                         {
                             playerapp._boobWeight = value;
+                        }
+                        else if (Parts[1] == "scale")
+                        {
+                            playerapp._heightWeight = value;
+                            playerapp._widthWeight = value;
                         }
                         else if(Parts[1] == "height")
                         {
@@ -55,23 +60,23 @@ namespace Lilly_s_Beyond_Limits
                         {
                             playerapp._widthWeight = value;
                         }
-                        else if(Parts[1] == "butt")
+                        else if(Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom")
                         {
                             playerapp._bottomWeight = value;
                         }
-                        else if(Parts[1] == "belly")
+                        else if(Parts[1] == "belly" || Parts[1] == "stomach")
                         {
                             playerapp._bellyWeight = value;
                         }
-                        else if(Parts[1] == "muzzle")
+                        else if(Parts[1] == "muzzle" || Parts[1] == "snout" || Parts[1] == "nose")
                         {
                             playerapp._muzzleWeight = value;
                         }
-                        else if (Parts[1] == "voice")
+                        else if (Parts[1] == "voice" || Parts[1] == "Pitch")
                         {
                             playerapp._voicePitch = value;
                         }
-                        else if (Parts[1] == "torso")
+                        else if (Parts[1] == "torso" || Parts[1] == "chest")
                         {
                             playerapp._torsoWeight = value;
                         }
@@ -81,7 +86,7 @@ namespace Lilly_s_Beyond_Limits
                         }
                         MelonLogger.Msg(_message);
                         Core.instance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
-                        ProfileDataManager._current.Save_ProfileData();
+                        ProfileDataManager._current.Init_SaveRoutine();
                         return false;
                     }
                 }
@@ -95,7 +100,9 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
-        [HarmonyPatch(typeof(GameManager), "Start")]
+
+        //level cap remover
+        /*[HarmonyPatch(typeof(GameManager), "Start")]
         public static class gamemanager
         {
             private static void Postfix(ref GameManager __instance)
@@ -109,7 +116,7 @@ namespace Lilly_s_Beyond_Limits
                     MelonLogger.Msg(e);
                 }
             }
-        }
+        }*/
 
         [HarmonyPatch(typeof(Player), "Handle_ServerConditions")]
         public static class fixPlayer
@@ -133,7 +140,7 @@ namespace Lilly_s_Beyond_Limits
                         playerapp._voicePitch = _aP._voicePitch;
                         playerapp._bellyWeight = _aP._bellyWeight;
                         playerapp._armWeight = _aP._armWeight;
-                        MelonLogger.Msg(_aP._boobWeight);
+                        //MelonLogger.Msg(_aP._boobWeight);
                         Core.instance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
                         Core.instance.fix = true;
                     }
@@ -191,7 +198,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(PlayerVisual), "Apply_NetworkedCharacterDisplay")]
         public static class fixapp
         {
-            private static bool Prefix(PlayerVisual __instance)
+            private static bool Prefix(ref PlayerVisual __instance)
             {
                 try
                 {
@@ -212,9 +219,38 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    //MelonLogger.Msg(e);
                 }
                 return true;
+            }
+        }
+
+        public float camDis;
+
+        [HarmonyPatch(typeof(CameraCollision), "<LateUpdate>g__Handle_DistanceControl|13_0")]
+        public static class setMaxCamDis
+        {
+            private static void Postfix(ref CameraCollision __instance)
+            {
+                try
+                {
+                    Core.instance.camDis = __instance.maxDistance;
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CameraCollision), "Handle_DetectGroundLayer")]
+        public static class removeCamCol
+        {
+            private static void Postfix(ref bool __result)
+            {
+                CameraCollision camCol = CameraCollision._current;
+                camCol.maxDistance = Core.instance.camDis;
+                __result = false;
             }
         }
 
@@ -231,29 +267,28 @@ namespace Lilly_s_Beyond_Limits
                 foreach (PlayerRaceModel go in Resources.FindObjectsOfTypeAll(typeof(PlayerRaceModel)) as PlayerRaceModel[])
                 {
                     var param = go._scriptablePlayerRace._raceDisplayParams;
-                    maxSizes[0] = new Vector2(param._headWidthRange.x, param._headWidthRange.y * 5);
-                    maxSizes[1] = new Vector2(param._headModRange.x, param._headModRange.y * 5);
-                    maxSizes[2] = new Vector2(param._heightRange.x, param._heightRange.y * 5);
-                    maxSizes[3] = new Vector2(param._widthRange.x, param._widthRange.y * 5);
-                    maxSizes[4] = new Vector2(param._torsoRange.x, param._torsoRange.y * 5);
-                    maxSizes[5] = new Vector2(param._boobRange.x, param._boobRange.y * 5);
-                    maxSizes[6] = new Vector2(param._armRange.x, param._armRange.y * 5);
-                    maxSizes[7] = new Vector2(param._bellyRange.x, param._bellyRange.y * 5);
-                    maxSizes[8] = new Vector2(param._bottomRange.x, param._bottomRange.y * 5);
+                    maxSizes[0] = new Vector2(param._headWidthRange.x / 2, param._headWidthRange.y * 2);
+                    maxSizes[1] = new Vector2(param._headModRange.x / 2, param._headModRange.y * 2);
+                    maxSizes[2] = new Vector2(param._heightRange.x / 2, param._heightRange.y * 2);
+                    maxSizes[3] = new Vector2(param._widthRange.x / 2, param._widthRange.y * 2);
+                    maxSizes[4] = new Vector2(param._torsoRange.x * 2, param._torsoRange.y * 2);
+                    maxSizes[5] = new Vector2(param._boobRange.x * 2, param._boobRange.y * 2);
+                    maxSizes[6] = new Vector2(param._armRange.x * 2, param._armRange.y * 2);
+                    maxSizes[7] = new Vector2(param._bellyRange.x * 2, param._bellyRange.y * 2);
+                    maxSizes[8] = new Vector2(param._bottomRange.x * 2, param._bottomRange.y * 2);
                     maxSizes[9] = new Vector2(param._pitchRange.x * 2, param._pitchRange.y * 2);
 
-
-                    param._headWidthRange.y = param._headWidthRange.y * 5;
-                    param._headModRange.y = param._headModRange.y * 5;
-                    param._heightRange.y = param._heightRange.y * 5;
-                    param._widthRange.y = param._widthRange.y * 5;
-                    param._torsoRange.y = param._torsoRange.y * 5;
-                    param._boobRange.y = param._boobRange.y * 5;
-                    param._armRange.y = param._armRange.y * 5;
-                    param._bellyRange.y = param._bellyRange.y * 5;
-                    param._bottomRange.y = param._bottomRange.y * 5;
-                    param._pitchRange.y = param._pitchRange.y * 2;
-                    param._pitchRange.x = param._pitchRange.x * 2;
+                    
+                    param._headWidthRange = Core.instance.maxSizes[0];
+                    param._headModRange = Core.instance.maxSizes[1];
+                    param._heightRange = Core.instance.maxSizes[2];
+                    param._widthRange = Core.instance.maxSizes[3];
+                    param._torsoRange = Core.instance.maxSizes[4];
+                    param._boobRange = Core.instance.maxSizes[5];
+                    param._armRange = Core.instance.maxSizes[6];
+                    param._bellyRange = Core.instance.maxSizes[7];
+                    param._bottomRange = Core.instance.maxSizes[8];
+                    param._pitchRange = Core.instance.maxSizes[9];
                 }
             }
             catch (Exception e)
