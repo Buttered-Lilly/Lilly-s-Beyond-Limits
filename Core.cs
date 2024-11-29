@@ -148,6 +148,7 @@ namespace Lilly_s_Beyond_Limits
                         playerapp._headWidth = _aP._headWidth;
                         playerapp._bottomWeight = _aP._bottomWeight;
                         playerapp._heightWeight = _aP._heightWeight;
+                        playerapp._widthWeight = _aP._widthWeight;
                         playerapp._torsoWeight = _aP._torsoWeight;
                         playerapp._muzzleWeight = _aP._muzzleWeight;
                         playerapp._voicePitch = _aP._voicePitch;
