@@ -39,53 +39,66 @@ namespace Lilly_s_Beyond_Limits
                         //_message = "<>/";
                         float value;
                         float.TryParse(Parts[2], out value);
-                        if (Parts[1] == "boobs" || Parts[1] == "tits" || Parts[1] == "boob" || Parts[1] == "tit")
+                        if (Parts[1] == "boobs" || Parts[1] == "tits" || Parts[1] == "boob" || Parts[1] == "tit" || Parts[1] == "breast" || Parts[1] == "breasts")
                         {
                             playerapp._boobWeight = value;
+                            _aP._boobWeight = value;
                         }
                         else if (Parts[1] == "scale")
                         {
                             playerapp._heightWeight = value;
                             playerapp._widthWeight = value;
+                            _aP._heightWeight = value;
+                            _aP._widthWeight = value;
                         }
                         else if(Parts[1] == "height")
                         {
                             playerapp._heightWeight = value;
+                            _aP._heightWeight = value;
                         }
                         else if(Parts[1] == "head")
                         {
                             playerapp._headWidth = value;
+                            _aP._headWidth = value;
                         }
                         else if(Parts[1] == "width")
                         {
                             playerapp._widthWeight = value;
+                            _aP._widthWeight = value;
                         }
                         else if(Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom")
                         {
                             playerapp._bottomWeight = value;
+                            _aP._bottomWeight = value;
                         }
                         else if(Parts[1] == "belly" || Parts[1] == "stomach")
                         {
                             playerapp._bellyWeight = value;
+                            _aP._bellyWeight = value;
                         }
                         else if(Parts[1] == "muzzle" || Parts[1] == "snout" || Parts[1] == "nose")
                         {
                             playerapp._muzzleWeight = value;
+                            _aP._muzzleWeight = value;
                         }
                         else if (Parts[1] == "voice" || Parts[1] == "Pitch")
                         {
                             playerapp._voicePitch = value;
+                            _aP._voicePitch = value;
                         }
                         else if (Parts[1] == "torso" || Parts[1] == "chest")
                         {
                             playerapp._torsoWeight = value;
+                            _aP._torsoWeight = value;
                         }
                         else if (Parts[1] == "arms")
                         {
                             playerapp._armWeight = value;
+                            playerapp._armWeight = value;
                         }
                         MelonLogger.Msg(_message);
                         Core.instance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
+                        ProfileDataManager._current._characterFile._appearanceProfile = _aP;
                         ProfileDataManager._current.Init_SaveRoutine();
                         return false;
                     }
