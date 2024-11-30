@@ -324,7 +324,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Core.cs" />
+		<Compile Include="BeyondCore.cs" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
