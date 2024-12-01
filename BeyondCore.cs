@@ -19,6 +19,7 @@ namespace Lilly_s_Beyond_Limits
         public PlayerAppearance_Profile profile;
         public PlayerAppearanceStruct playerapp;
         public bool fix = false;
+        public bool isSitting = false;
 
         [HarmonyPatch(typeof(ChatBehaviour), "Cmd_SendChatMessage")]
         public static class chatCommands
@@ -277,6 +278,52 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
+        [HarmonyPatch(typeof(CameraFunction), "FollowTargetObj")]
+        public static class cameraHeight
+        {
+            public static void Prefix(ref CameraFunction __instance)
+            {
+                try
+                {
+                    if(BeyondCore.Beyondinstance.playerVis != null)
+                    {
+                        if(Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11).Length > 0)
+                        {
+                            if(Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11)[0].clip.name.Contains("_sit"))
+                                __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight / 2;
+                            else
+                                __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight;
+                        }
+                        else
+                            __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight;
+                    }
+                    //MelonLogger.Msg(__instance.positionAdjust);
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CameraFogDensity), "OnPreRender")]
+        public static class cameraFog
+        {
+            public static bool Prefix(ref CameraFogDensity __instance)
+            {
+                try
+                {
+                    __instance.fogDensity = 0.0001f;
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Msg(e);
+                    return true;
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(ScriptablePlayerRace), "Init_ParamsCheck")]
         public static class bypass
         {
@@ -315,12 +362,30 @@ namespace Lilly_s_Beyond_Limits
                         return true;
                     var param = __instance._playerRaceModel._scriptablePlayerRace._raceDisplayParams;
                     BeyondCore.Beyondinstance.playerVis = __instance;
+                    CameraFunction._current._mainCamera.farClipPlane = 10000;
+                    CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
                 }
                 catch (Exception e)
                 {
                     //MelonLogger.Msg(e);
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(SettingsManager), "Load_SettingsData")]
+        public static class fixSettings
+        {
+            private static void Postfix(ref SettingsManager __instance)
+            {
+                try
+                {
+                    __instance._limitProportionsToggle.isOn = false;
+                }
+                catch (Exception e)
+                {
+                    //MelonLogger.Msg(e);
+                }
             }
         }
 
