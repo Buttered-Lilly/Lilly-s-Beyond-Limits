@@ -287,7 +287,9 @@ namespace Lilly_s_Beyond_Limits
                 {
                     if(BeyondCore.Beyondinstance.playerVis != null)
                     {
-                        if(Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11).Length > 0)
+                        CameraFunction._current._mainCamera.farClipPlane = 10000;
+                        CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
+                        if (Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11).Length > 0)
                         {
                             if(Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11)[0].clip.name.Contains("_sit"))
                                 __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight / 2;
@@ -354,22 +356,19 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(PlayerVisual), "Apply_NetworkedCharacterDisplay")]
         public static class fixapp
         {
-            private static bool Prefix(ref PlayerVisual __instance)
+            private static void Prefix(ref PlayerVisual __instance)
             {
                 try
                 {
                     if (!__instance.isLocalPlayer)
-                        return true;
+                        return;
                     var param = __instance._playerRaceModel._scriptablePlayerRace._raceDisplayParams;
                     BeyondCore.Beyondinstance.playerVis = __instance;
-                    CameraFunction._current._mainCamera.farClipPlane = 10000;
-                    CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
                 }
                 catch (Exception e)
                 {
                     //MelonLogger.Msg(e);
                 }
-                return true;
             }
         }
 
