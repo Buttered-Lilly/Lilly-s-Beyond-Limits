@@ -15,9 +15,9 @@ A mod made to work with Melon Loader (https://github.com/LavaGang/MelonLoader/re
 - ~~add more body part name variety to allow other names to work eg. "Ass, butt, bottom" or boobs, boob, tits, tit"~~
 
 
-- add proportional scale for width and height, to allow for easy resizing without "getting stretched"
+- ~~add proportional scale for width and height, to allow for easy resizing without "getting stretched"~~
 
-- fix slider limits 
+- ~~fix slider limits~~
 
 # CHAT COMMANDS
 
