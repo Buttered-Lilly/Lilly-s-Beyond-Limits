@@ -334,7 +334,7 @@ namespace Lilly_s_Beyond_Limits
                 try
                 {
                     float axis = Input.GetAxis("Mouse ScrollWheel");
-                    if (axis != 0f || !Player._mainPlayer._bufferingStatus || !Player._mainPlayer._inChat || !Player._mainPlayer._inUI)
+                    if (axis != 0f && !Player._mainPlayer._bufferingStatus && !Player._mainPlayer._inChat && !Player._mainPlayer._inUI)
                     {
                         __instance.maxDistance += axis * (35.5f + MathF.Abs(BeyondCore.Beyondinstance.camDis));
                     }
