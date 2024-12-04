@@ -28,11 +28,12 @@ namespace Lilly_s_Beyond_Limits
             {
                 try
                 {
-                    _message = _message.ToLower();
-                    MelonLogger.Msg(_message);
+                    string temp;
+                    temp = _message.ToLower();
+                    MelonLogger.Msg(temp);
                     string[] Parts;
-                    Parts = _message.Split(" ");
-                    if (_message.StartsWith("/size"))
+                    Parts = temp.Split(" ");
+                    if (temp.StartsWith("/size"))
                     {
                         bool passed = Beyondinstance.scalePlayer(Parts);
                         if (passed)
@@ -41,7 +42,7 @@ namespace Lilly_s_Beyond_Limits
                             __instance.New_ChatMessage("Size Change Failed");
                         return false;
                     }
-                    else if (_message.StartsWith("/slider"))
+                    else if (temp.StartsWith("/slider"))
                     {
                         bool passed = Beyondinstance.setSliderLimit(Parts);
                         if (passed)
@@ -137,7 +138,7 @@ namespace Lilly_s_Beyond_Limits
             //MelonLogger.Msg(_message);
             BeyondCore.Beyondinstance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
             ProfileDataManager._current._characterFile._appearanceProfile = _aP;
-            ProfileDataManager._current.Init_SaveRoutine();
+            ProfileDataManager._current.Save_ProfileData();
             return true;
         }
 
@@ -420,7 +421,21 @@ namespace Lilly_s_Beyond_Limits
             {
                 CameraCollision camCol = CameraCollision._current;
                 camCol.maxDistance = BeyondCore.Beyondinstance.camDis;
-                __result = false;
+                if (!col)
+                {
+                    __result = false;
+                }
+            }
+        }
+
+        static bool col = false;
+
+        public override void OnUpdate()
+        {
+            if(Input.GetKeyDown(KeyCode.BackQuote) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift))
+            {
+                col = !col;
+                ChatBehaviour._current.New_ChatMessage($"Camera Collision: {col}");
             }
         }
 
