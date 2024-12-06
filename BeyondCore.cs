@@ -1,20 +1,18 @@
-﻿using MelonLoader;
+﻿//using MelonLoader;
 using HarmonyLib;
 using UnityEngine;
 using System.Collections;
 using static MelonLoader.MelonLogger;
 
-[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.BeyondCore), "Lilly's Beyond Limits", "1.0.0", "Lilly", null)]
-[assembly: MelonGame("KisSoft", "ATLYSS")]
 
 namespace Lilly_s_Beyond_Limits
 {
-    public class BeyondCore : MelonMod
+    public class BeyondCore : MonoBehaviour
     {
 
         public Vector2[] maxSizes = new Vector2[10];
 
-        static BeyondCore Beyondinstance;
+        public static BeyondCore Beyondinstance;
         public PlayerVisual playerVis;
         public PlayerAppearance_Profile profile;
         public PlayerAppearanceStruct playerapp;
@@ -24,13 +22,14 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(ChatBehaviour), "Cmd_SendChatMessage")]
         public static class chatCommands
         {
+            [HarmonyPrefix]
             private static bool Prefix(ref ChatBehaviour __instance,  ref string _message)
             {
                 try
                 {
                     string temp;
                     temp = _message.ToLower();
-                    MelonLogger.Msg(temp);
+                    //MelonLogger.Msg(temp);
                     string[] Parts;
                     Parts = temp.Split(" ");
                     if (temp.StartsWith("/size"))
@@ -54,7 +53,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    //MelonLogger.Msg(e);
                     //_message = "<>/";
                     return false;
                 }
@@ -231,6 +230,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(Player), "Handle_ServerConditions")]
         public static class fixPlayer
         {
+            [HarmonyPostfix]
             public static void Postfix(ref Player __instance)
             {
                 try
@@ -258,7 +258,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                 }
             }
         }
@@ -266,6 +266,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(AtlyssNetworkManager), "OnStopClient")]
         public static class reset
         {
+            [HarmonyPostfix]
             public static void Postfix()
             {
                 try
@@ -274,7 +275,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                 }
             }
         }
@@ -282,6 +283,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CameraFunction), "FollowTargetObj")]
         public static class cameraHeight
         {
+            [HarmonyPrefix]
             public static void Prefix(ref CameraFunction __instance)
             {
                 try
@@ -304,7 +306,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                 }
             }
         }
@@ -312,6 +314,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CameraFogDensity), "OnPreRender")]
         public static class cameraFog
         {
+            [HarmonyPrefix]
             public static bool Prefix(ref CameraFogDensity __instance)
             {
                 try
@@ -321,7 +324,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                     return true;
                 }
             }
@@ -330,6 +333,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(ScriptablePlayerRace), "Init_ParamsCheck")]
         public static class bypass
         {
+            [HarmonyPrefix]
             private static bool Prefix(ref PlayerAppearance_Profile _aP, ref PlayerAppearance_Profile __result)
             {
                 __result = _aP;
@@ -340,6 +344,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CharacterSelectManager), "Apply_CharacterSelectDisplay")]
         public static class getProfile
         {
+            [HarmonyPostfix]
             private static void Postfix()
             {
                 try
@@ -349,7 +354,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                 }
             }
         }
@@ -357,6 +362,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(PlayerVisual), "Apply_NetworkedCharacterDisplay")]
         public static class fixapp
         {
+            [HarmonyPrefix]
             private static void Prefix(ref PlayerVisual __instance)
             {
                 try
@@ -376,6 +382,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(SettingsManager), "Load_SettingsData")]
         public static class fixSettings
         {
+            [HarmonyPostfix]
             private static void Postfix(ref SettingsManager __instance)
             {
                 try
@@ -394,6 +401,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CameraCollision), "<LateUpdate>g__Handle_DistanceControl|13_0")]
         public static class setMaxCamDis
         {
+            [HarmonyPrefix]
             private static bool Prefix(ref CameraCollision __instance)
             {
                 try
@@ -408,7 +416,7 @@ namespace Lilly_s_Beyond_Limits
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg(e);
+                    Debug.Log(e);
                     return true;
                 }
             }
@@ -417,6 +425,7 @@ namespace Lilly_s_Beyond_Limits
         [HarmonyPatch(typeof(CameraCollision), "Handle_DetectGroundLayer")]
         public static class removeCamCol
         {
+            [HarmonyPostfix]
             private static void Postfix(ref bool __result)
             {
                 CameraCollision camCol = CameraCollision._current;
@@ -430,19 +439,19 @@ namespace Lilly_s_Beyond_Limits
 
         static bool col = false;
 
-        public override void OnUpdate()
+        void Start()
         {
-            if(Input.GetKeyDown(KeyCode.BackQuote) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift))
+            Beyondinstance = this;
+            //Debug.Log("ran");
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.BackQuote) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift))
             {
                 col = !col;
                 ChatBehaviour._current.New_ChatMessage($"Camera Collision: {col}");
             }
-        }
-
-        public override void OnLateInitializeMelon()
-        {
-            Beyondinstance = this;
-            //uncapSizes();
         }
 
         /*void uncapSizes()

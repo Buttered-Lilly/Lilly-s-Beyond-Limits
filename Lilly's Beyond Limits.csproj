@@ -15,8 +15,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Reference Include="0Harmony">
+		  <HintPath>S:\SteamLibrary\steamapps\common\ATLYSS\MelonLoader\net6\0Harmony.dll</HintPath>
+		</Reference>
 		<Reference Include="Assembly-CSharp">
 			<HintPath>S:\SteamLibrary\steamapps\common\ATLYSS\ATLYSS_Data\Managed\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx">
+		  <HintPath>..\..\..\download\BepInEx_win_x64_5.4.23.2\BepInEx\core\BepInEx.dll</HintPath>
 		</Reference>
 		<Reference Include="com.rlabrecque.steamworks.net">
 			<HintPath>S:\SteamLibrary\steamapps\common\ATLYSS\ATLYSS_Data\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
@@ -312,9 +318,6 @@
 		<Reference Include="MelonLoader">
 			<HintPath>S:\SteamLibrary\steamapps\common\ATLYSS\MelonLoader\net35\MelonLoader.dll</HintPath>
 		</Reference>
-		<Reference Include="0Harmony">
-			<HintPath>S:\SteamLibrary\steamapps\common\ATLYSS\MelonLoader\net35\0Harmony.dll</HintPath>
-		</Reference>
 
 	</ItemGroup>
 
@@ -324,7 +327,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="Bepin.cs" />
 		<Compile Include="BeyondCore.cs" />
+		<Compile Include="Melon.cs" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
