@@ -1,5 +1,4 @@
-﻿//using MelonLoader;
-using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 using System.Collections;
 using static MelonLoader.MelonLogger;
@@ -23,7 +22,7 @@ namespace Lilly_s_Beyond_Limits
         public static class chatCommands
         {
             [HarmonyPrefix]
-            private static bool Prefix(ref ChatBehaviour __instance,  ref string _message)
+            private static bool Prefix(ref ChatBehaviour __instance, ref string _message)
             {
                 try
                 {
@@ -71,7 +70,7 @@ namespace Lilly_s_Beyond_Limits
             {
                 float.TryParse(Parts[2], out value);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }
@@ -227,7 +226,7 @@ namespace Lilly_s_Beyond_Limits
             }
         }*/
 
-        [HarmonyPatch(typeof(Player), "Handle_ServerConditions")]
+        [HarmonyPatch(typeof(Player), "Handle_ServerParameters")]
         public static class fixPlayer
         {
             [HarmonyPostfix]
@@ -288,13 +287,13 @@ namespace Lilly_s_Beyond_Limits
             {
                 try
                 {
-                    if(BeyondCore.Beyondinstance.playerVis != null)
+                    if (BeyondCore.Beyondinstance.playerVis != null)
                     {
                         CameraFunction._current._mainCamera.farClipPlane = 10000;
                         CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
                         if (Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11).Length > 0)
                         {
-                            if(Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11)[0].clip.name.Contains("_sit"))
+                            if (Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11)[0].clip.name.Contains("_sit"))
                                 __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight / 2;
                             else
                                 __instance.positionAdjust = new Vector3(0, 2.15f, 0) * BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight;
@@ -329,6 +328,23 @@ namespace Lilly_s_Beyond_Limits
                 }
             }
         }
+
+        /*[HarmonyPatch(typeof(Camera), "ScreenPointToRay", new Type[] { typeof(Vector3) })]
+        public static class bowFix
+        {
+            [HarmonyPrefix]
+            public static void Prefix(ref Vector3 pos)
+            {
+                try
+                {
+                    pos.y = pos.y / BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight;
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }*/
 
         [HarmonyPatch(typeof(ScriptablePlayerRace), "Init_ParamsCheck")]
         public static class bypass
