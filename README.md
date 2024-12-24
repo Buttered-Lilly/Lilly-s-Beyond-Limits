@@ -10,7 +10,7 @@ A mod made to work with Melon Loader (https://github.com/LavaGang/MelonLoader/re
 
 - ~~separate uncapped player level to different mod~~
 
-- fork to bepin
+- ~~fork to bepin~~
 
 - ~~add more body part name variety to allow other names to work eg. "Ass, butt, bottom" or boobs, boob, tits, tit"~~
 
