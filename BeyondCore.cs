@@ -2,11 +2,12 @@
 using UnityEngine;
 using System.Collections;
 using static MelonLoader.MelonLogger;
+using MelonLoader;
 
 
 namespace Lilly_s_Beyond_Limits
 {
-    public class BeyondCore : MonoBehaviour
+    unsafe public class BeyondCore : MonoBehaviour
     {
 
         public Vector2[] maxSizes = new Vector2[10];
@@ -33,7 +34,16 @@ namespace Lilly_s_Beyond_Limits
                     Parts = temp.Split(" ");
                     if (temp.StartsWith("/size"))
                     {
-                        bool passed = Beyondinstance.scalePlayer(Parts);
+                        bool passed = Beyondinstance.getPart(Parts, 0, false);
+                        if (passed)
+                            __instance.New_ChatMessage("Size Changed");
+                        else
+                            __instance.New_ChatMessage("Size Change Failed");
+                        return false;
+                    }
+                    if (temp.StartsWith("/grow"))
+                    {
+                        bool passed = Beyondinstance.getPart(Parts, 1, true);
                         if (passed)
                             __instance.New_ChatMessage("Size Changed");
                         else
@@ -60,12 +70,10 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
-        public bool scalePlayer(string[] Parts)
+        bool getPart(string[] Parts, int type, bool add)
         {
-            PlayerAppearanceStruct playerapp = BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct;
-            PlayerAppearance_Profile _aP = BeyondCore.Beyondinstance.profile;
-            //_message = "<>/";
             float value;
+            int part = 0;
             try
             {
                 float.TryParse(Parts[2], out value);
@@ -76,60 +84,206 @@ namespace Lilly_s_Beyond_Limits
             }
             if (Parts[1] == "boobs" || Parts[1] == "tits" || Parts[1] == "boob" || Parts[1] == "tit" || Parts[1] == "breast" || Parts[1] == "breasts")
             {
-                playerapp._boobWeight = value;
-                _aP._boobWeight = value;
+                part = 1;
             }
             else if (Parts[1] == "scale")
             {
-                playerapp._heightWeight = value;
-                playerapp._widthWeight = value;
-                _aP._heightWeight = value;
-                _aP._widthWeight = value;
+                part = 2;
             }
             else if (Parts[1] == "height")
             {
-                playerapp._heightWeight = value;
-                _aP._heightWeight = value;
+                part = 3;
             }
             else if (Parts[1] == "head")
             {
-                playerapp._headWidth = value;
-                _aP._headWidth = value;
+                part = 4;
             }
             else if (Parts[1] == "width")
             {
-                playerapp._widthWeight = value;
-                _aP._widthWeight = value;
+                part = 5;
             }
             else if (Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom")
             {
-                playerapp._bottomWeight = value;
-                _aP._bottomWeight = value;
+                part = 6;
             }
             else if (Parts[1] == "belly" || Parts[1] == "stomach")
             {
-                playerapp._bellyWeight = value;
-                _aP._bellyWeight = value;
+                part = 7;
             }
             else if (Parts[1] == "muzzle" || Parts[1] == "snout" || Parts[1] == "nose")
             {
-                playerapp._muzzleWeight = value;
-                _aP._muzzleWeight = value;
+                part = 8;
             }
             else if (Parts[1] == "voice" || Parts[1] == "Pitch")
             {
-                playerapp._voicePitch = value;
-                _aP._voicePitch = value;
+                part = 9;
             }
             else if (Parts[1] == "torso" || Parts[1] == "chest")
             {
-                playerapp._torsoWeight = value;
-                _aP._torsoWeight = value;
+                part = 10;
             }
             else if (Parts[1] == "arms")
             {
-                playerapp._armWeight = value;
-                _aP._armWeight = value;
+                part = 11;
+            }
+            if(part == 0)
+            {
+                return false;
+            }
+            return scalePlayer(part, value, add);
+        }
+
+        public bool scalePlayer(int part, float value, bool add)
+        {
+            PlayerAppearanceStruct playerapp = BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct;
+            PlayerAppearance_Profile _aP = BeyondCore.Beyondinstance.profile;
+            //_message = "<>/";
+            if (part == 1)
+            {
+                if (add)
+                {
+                    playerapp._boobWeight += value;
+                    _aP._boobWeight += value;
+                }
+                else
+                {
+                    playerapp._boobWeight = value;
+                    _aP._boobWeight = value;
+                }
+            }
+            else if (part == 2)
+            {
+                if (add)
+                {
+                    playerapp._heightWeight += value;
+                    playerapp._widthWeight += value;
+                    _aP._heightWeight += value;
+                    _aP._widthWeight += value;
+                }
+                else
+                {
+                    playerapp._heightWeight = value;
+                    playerapp._widthWeight = value;
+                    _aP._heightWeight = value;
+                    _aP._widthWeight = value;
+                }
+            }
+            else if (part == 3)
+            {
+                if (add)
+                {
+                    playerapp._heightWeight += value;
+                    _aP._heightWeight += value;
+                }
+                else
+                {
+                    playerapp._heightWeight = value;
+                    _aP._heightWeight = value;
+                }
+            }
+            else if (part == 4)
+            {
+                if (add)
+                {
+                    playerapp._headWidth += value;
+                    _aP._headWidth += value;
+                }
+                else
+                {
+                    playerapp._headWidth = value;
+                    _aP._headWidth = value;
+                }
+            }
+            else if (part == 5)
+            {
+                if (add)
+                {
+                    playerapp._widthWeight += value;
+                    _aP._widthWeight += value;
+                }
+                else
+                {
+                    playerapp._widthWeight = value;
+                    _aP._widthWeight = value;
+                }
+            }
+            else if (part == 6)
+            {
+                if (add)
+                {
+                    playerapp._bottomWeight += value;
+                    _aP._bottomWeight += value;
+                }
+                else
+                {
+                    playerapp._bottomWeight = value;
+                    _aP._bottomWeight = value;
+                }
+            }
+            else if (part == 7)
+            {
+                if (add)
+                {
+                    playerapp._bellyWeight += value;
+                    _aP._bellyWeight += value;
+                }
+                else
+                {
+                    playerapp._bellyWeight = value;
+                    _aP._bellyWeight = value;
+                }
+            }
+            else if (part == 8)
+            {
+                if (add)
+                {
+                    playerapp._muzzleWeight += value;
+                    _aP._muzzleWeight += value;
+                }
+                else
+                {
+                    playerapp._muzzleWeight = value;
+                    _aP._muzzleWeight = value;
+                }
+            }
+            else if (part == 9)
+            {
+                if (add)
+                {
+                    playerapp._voicePitch += value;
+                    _aP._voicePitch += value;
+                }
+                else
+                {
+                    playerapp._voicePitch = value;
+                    _aP._voicePitch = value;
+                }
+            }
+            else if (part == 10)
+            {
+                if (add)
+                {
+                    playerapp._torsoWeight += value;
+                    _aP._torsoWeight += value;
+                }
+                else
+                {
+                    playerapp._torsoWeight = value;
+                    _aP._torsoWeight = value;
+                }
+            }
+            else if (part == 11)
+            {
+                if (add)
+                {
+                    playerapp._armWeight += value;
+                    _aP._armWeight += value;
+                }
+                else
+                {
+                    playerapp._armWeight = value;
+                    _aP._armWeight = value;
+                }
             }
             else
                 return false;
@@ -230,7 +384,7 @@ namespace Lilly_s_Beyond_Limits
         public static class fixPlayer
         {
             [HarmonyPostfix]
-            public static void Postfix(ref Player __instance)
+            unsafe public static void Postfix(ref Player __instance)
             {
                 try
                 {
@@ -250,7 +404,7 @@ namespace Lilly_s_Beyond_Limits
                         playerapp._voicePitch = _aP._voicePitch;
                         playerapp._bellyWeight = _aP._bellyWeight;
                         playerapp._armWeight = _aP._armWeight;
-                        //MelonLogger.Msg(_aP._boobWeight);
+
                         BeyondCore.Beyondinstance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
                         BeyondCore.Beyondinstance.fix = true;
                     }
@@ -290,7 +444,7 @@ namespace Lilly_s_Beyond_Limits
                     if (BeyondCore.Beyondinstance.playerVis != null)
                     {
                         CameraFunction._current._mainCamera.farClipPlane = 10000;
-                        CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
+                        //CameraFunction._current._mainCamera.nearClipPlane = 0.0001f;
                         if (Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11).Length > 0)
                         {
                             if (Beyondinstance.playerVis._visualAnimator.GetCurrentAnimatorClipInfo(11)[0].clip.name.Contains("_sit"))
@@ -413,6 +567,7 @@ namespace Lilly_s_Beyond_Limits
         }
 
         public float camDis;
+        public float defaultcamDis;
 
         [HarmonyPatch(typeof(CameraCollision), "<LateUpdate>g__Handle_DistanceControl|13_0")]
         public static class setMaxCamDis
@@ -444,12 +599,13 @@ namespace Lilly_s_Beyond_Limits
             [HarmonyPostfix]
             private static void Postfix(ref bool __result)
             {
+                if (col)
+                {
+                    return;
+                }
                 CameraCollision camCol = CameraCollision._current;
                 camCol.maxDistance = BeyondCore.Beyondinstance.camDis;
-                if (!col)
-                {
-                    __result = false;
-                }
+                __result = false;
             }
         }
 
