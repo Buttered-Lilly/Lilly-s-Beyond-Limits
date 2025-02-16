@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.MelonLoad), "Lilly's Beyond Limits", "3.0.1", "Lilly", null)]
+[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.MelonLoad), "Lilly's Beyond Limits", "3.0.2", "Lilly", null)]
 [assembly: MelonGame("KisSoft", "ATLYSS")]
 [assembly: MelonOptionalDependencies("BepInEx")]
 

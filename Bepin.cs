@@ -5,7 +5,7 @@ using HarmonyLib;
 
 namespace Lilly_s_Beyond_Limits
 {
-    [BepInPlugin("0a26c5bd-f173-47f8-8f50-006dd6806ce6", "Lilly's Beyond Limits", "1.0.0.0")]
+    [BepInPlugin("0a26c5bd-f173-47f8-8f50-006dd6806ce6", "Lilly's Beyond Limits", "3.0.2")]
     public class Bepin : BaseUnityPlugin
     {
         BeyondCore beyondcore;
