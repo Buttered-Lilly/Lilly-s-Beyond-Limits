@@ -19,6 +19,29 @@ namespace Lilly_s_Beyond_Limits
         public bool fix = false;
         public bool isSitting = false;
 
+        [HarmonyPatch(typeof(Player), "OnGameConditionChange")]
+        public static class lillyCred
+        {
+            [HarmonyPrefix]
+            private static bool Prefix(ref Player __instance)
+            {
+                try
+                {
+                    if(__instance.Network_currentGameCondition == GameCondition.IN_GAME && __instance.Network_steamID == "76561198286273592")
+                    {
+                        __instance._globalNickname = $"<b><color=red>{__instance.Network_globalNickname}</color></b>";
+                    }
+                }
+                catch (Exception e)
+                {
+                    //MelonLogger.Msg(e);
+                    //_message = "<>/";
+                    return false;
+                }
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(ChatBehaviour), "Cmd_SendChatMessage")]
         public static class chatCommands
         {
