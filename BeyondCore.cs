@@ -3,6 +3,11 @@ using UnityEngine;
 using System.Collections;
 using static MelonLoader.MelonLogger;
 using MelonLoader;
+using Mirror;
+using System.Runtime.CompilerServices;
+using System.Reflection;
+using Steamworks;
+using System.Text;
 
 
 namespace Lilly_s_Beyond_Limits
@@ -19,26 +24,31 @@ namespace Lilly_s_Beyond_Limits
         public bool fix = false;
         public bool isSitting = false;
 
+        protected Callback<LobbyChatMsg_t> messageRecived;
+
         [HarmonyPatch(typeof(Player), "OnGameConditionChange")]
         public static class lillyCred
         {
             [HarmonyPrefix]
-            private static bool Prefix(ref Player __instance)
+            private static void Prefix(ref Player __instance)
             {
                 try
                 {
-                    if(__instance.Network_currentGameCondition == GameCondition.IN_GAME && __instance.Network_steamID == "76561198286273592")
+                    if(__instance.Network_currentGameCondition == GameCondition.IN_GAME)
+                    {
+                        byte[] bytes = Encoding.ASCII.GetBytes("Lillys Mod");
+                        CSteamID steamID = new CSteamID(SteamLobby._current._currentLobbyID);
+                        SteamMatchmaking.SendLobbyChatMsg(steamID, bytes, bytes.Length);
+                    }
+                    if (__instance.Network_currentGameCondition == GameCondition.IN_GAME && __instance.Network_steamID == "76561198286273592")
                     {
                         __instance._globalNickname = $"<b><color=red>{__instance.Network_globalNickname}</color></b>";
                     }
                 }
                 catch (Exception e)
                 {
-                    //MelonLogger.Msg(e);
-                    //_message = "<>/";
-                    return false;
+                    //MelonLogger.Msg(e.Message);
                 }
-                return true;
             }
         }
 
@@ -637,7 +647,48 @@ namespace Lilly_s_Beyond_Limits
         void Start()
         {
             Beyondinstance = this;
+            messageRecived = Callback<LobbyChatMsg_t>.Create(onMessage);
             //Debug.Log("ran");
+        }
+
+        void onMessage(LobbyChatMsg_t callback)
+        {
+            try
+            {
+                //MelonLogger.Msg("Got Message");
+                if((CSteamID)callback.m_ulSteamIDUser == SteamUser.GetSteamID())
+                {
+                    return;
+                }
+                int bufferSize = 5000;
+                byte[] data = new byte[bufferSize];
+                CSteamID sender;
+                EChatEntryType chatType;
+                SteamMatchmaking.GetLobbyChatEntry((CSteamID)callback.m_ulSteamIDLobby, (int)callback.m_iChatID, out sender, data, bufferSize, out chatType);
+                string message = Encoding.ASCII.GetString(data);
+                //MelonLogger.Msg(message);
+                if (message.Contains("Lillys Mod"))
+                {
+                    //MelonLogger.Msg(callback.m_ulSteamIDUser + " Has Mod");
+                    findPlayer((CSteamID)callback.m_ulSteamIDUser);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        void findPlayer(CSteamID steamID)
+        {
+            foreach(Player player in GameObject.FindObjectsOfType(typeof(Player)))
+            {
+                if(player.Network_steamID == steamID.ToString())
+                {
+                    //MelonLogger.Msg(player._nickname + " Has Mod");
+                    player._nickname = $"<color=green>{player.Network_nickname}</color>";
+                }
+            }
         }
 
         void Update()
