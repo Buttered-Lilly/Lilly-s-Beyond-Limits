@@ -24,6 +24,8 @@ namespace Lilly_s_Beyond_Limits
         public bool fix = false;
         public bool isSitting = false;
 
+        public Func<string, bool> Logger;
+
         protected Callback<LobbyChatMsg_t> messageRecived;
 
         [HarmonyPatch(typeof(Player), "OnGameConditionChange")]
@@ -42,7 +44,13 @@ namespace Lilly_s_Beyond_Limits
                     }
                     if (__instance.Network_currentGameCondition == GameCondition.IN_GAME && __instance.Network_steamID == "76561198286273592")
                     {
-                        __instance._globalNickname = $"<b><color=red>{__instance.Network_globalNickname}</color></b>";
+                        if(!__instance._globalNickname.Contains("color"))
+                            __instance._globalNickname = $"<b><color=red>{__instance.Network_globalNickname}</color></b>";
+                        else
+                        {
+                            return;
+                            //Beyondinstance.Logger("has color");
+                        }
                     }
                 }
                 catch (Exception e)
@@ -516,22 +524,6 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
-        /*[HarmonyPatch(typeof(Camera), "ScreenPointToRay", new Type[] { typeof(Vector3) })]
-        public static class bowFix
-        {
-            [HarmonyPrefix]
-            public static void Prefix(ref Vector3 pos)
-            {
-                try
-                {
-                    pos.y = pos.y / BeyondCore.Beyondinstance.playerVis._playerAppearanceStruct._heightWeight;
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-        }*/
 
         [HarmonyPatch(typeof(ScriptablePlayerRace), "Init_ParamsCheck")]
         public static class bypass
@@ -681,14 +673,26 @@ namespace Lilly_s_Beyond_Limits
 
         void findPlayer(CSteamID steamID)
         {
-            foreach(Player player in GameObject.FindObjectsOfType(typeof(Player)))
+            try
             {
-                if(player.Network_steamID == steamID.ToString())
+                foreach (Player player in GameObject.FindObjectsOfType(typeof(Player)))
                 {
-                    //MelonLogger.Msg(player._nickname + " Has Mod");
-                    player._nickname = $"<color=green>{player.Network_nickname}</color>";
+                    if (player.Network_steamID == steamID.ToString())
+                    {
+                        if (!player._nickname.Contains("color"))
+                        {
+                            player._nickname = $"<color=green>{player.Network_nickname}</color>";
+                        }
+                        else
+                        {
+                            //Beyondinstance.Logger("has color");
+                            return;
+                        }
+                        //MelonLogger.Msg(player._nickname + " Has Mod");
+                    }
                 }
             }
+            catch (Exception e) { }
         }
 
         void Update()

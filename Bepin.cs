@@ -16,8 +16,15 @@ namespace Lilly_s_Beyond_Limits
             GameObject g = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
             g.hideFlags = UnityEngine.HideFlags.HideAndDontSave;
             beyondcore = g.AddComponent<BeyondCore>();
+            beyondcore.Logger = logger;
             var harmony = new HarmonyLib.Harmony("Lilly's Beyond Limits");
             harmony.PatchAll();
+        }
+
+        public bool logger(string mesg)
+        {
+            Logger.LogInfo($"{mesg}");
+            return true;
         }
     }
 }

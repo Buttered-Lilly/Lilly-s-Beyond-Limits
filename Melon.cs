@@ -22,6 +22,13 @@ namespace Lilly_s_Beyond_Limits
             GameObject g = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
             g.hideFlags = UnityEngine.HideFlags.HideAndDontSave;
             beyondcore = g.AddComponent<BeyondCore>();
+            beyondcore.Logger = logger;
+        }
+
+        public bool logger(string mesg)
+        {
+            MelonLogger.Msg(mesg);
+            return true;
         }
     }
 }
