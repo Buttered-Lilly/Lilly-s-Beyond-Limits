@@ -1,13 +1,8 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using System.Collections;
-using static MelonLoader.MelonLogger;
-using MelonLoader;
-using Mirror;
-using System.Runtime.CompilerServices;
-using System.Reflection;
 using Steamworks;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace Lilly_s_Beyond_Limits
@@ -23,8 +18,10 @@ namespace Lilly_s_Beyond_Limits
         public PlayerAppearanceStruct playerapp;
         public bool fix = false;
         public bool isSitting = false;
+        public bool col = false;
 
         public Func<string, bool> Logger;
+        public Func<string, bool> saveConfig;
 
         protected Callback<LobbyChatMsg_t> messageRecived;
 
@@ -70,7 +67,8 @@ namespace Lilly_s_Beyond_Limits
                 {
                     string temp;
                     temp = _message.ToLower();
-                    //MelonLogger.Msg(temp);
+                    Regex.Replace(temp, "<.*?>", "");
+                    //Beyondinstance.Logger(temp);
                     string[] Parts;
                     Parts = temp.Split(" ");
                     if (temp.StartsWith("/size"))
@@ -98,6 +96,19 @@ namespace Lilly_s_Beyond_Limits
                             __instance.New_ChatMessage("Slider Size Changed");
                         else
                             __instance.New_ChatMessage("Slider Size Change Failed");
+                        return false;
+                    }
+                    else if (temp.StartsWith("/camera"))
+                    {
+                        Beyondinstance.col = !Beyondinstance.col;
+                        ChatBehaviour._current.New_ChatMessage($"Camera Collision: {Beyondinstance.col}");
+
+                        bool pass = Beyondinstance.saveConfig("");
+                        if (!pass)
+                        {
+                            ChatBehaviour._current.New_ChatMessage("Failed To Save Config Check Console For Info");
+                        }
+
                         return false;
                     }
                 }
@@ -624,7 +635,7 @@ namespace Lilly_s_Beyond_Limits
             [HarmonyPostfix]
             private static void Postfix(ref bool __result)
             {
-                if (col)
+                if (Beyondinstance.col)
                 {
                     return;
                 }
@@ -634,7 +645,6 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
-        static bool col = false;
 
         void Start()
         {
@@ -693,15 +703,6 @@ namespace Lilly_s_Beyond_Limits
                 }
             }
             catch (Exception e) { }
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.BackQuote) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift))
-            {
-                col = !col;
-                ChatBehaviour._current.New_ChatMessage($"Camera Collision: {col}");
-            }
         }
 
         /*void uncapSizes()
