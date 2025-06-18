@@ -3,6 +3,7 @@ using UnityEngine;
 using Steamworks;
 using System.Text;
 using System.Text.RegularExpressions;
+using MelonLoader;
 
 
 namespace Lilly_s_Beyond_Limits
@@ -19,6 +20,17 @@ namespace Lilly_s_Beyond_Limits
         public bool fix = false;
         public bool isSitting = false;
         public bool col = false;
+
+        public Vector2 _headWidthRange;
+        public Vector2 _headModRange;
+        public Vector2 _heightRange;
+        public Vector2 _widthRange;
+        public Vector2 _torsoRange;
+        public Vector2 _boobRange;
+        public Vector2 _armRange;
+        public Vector2 _bellyRange;
+        public Vector2 _bottomRange;
+        public Vector2 _pitchRange;
 
         public Func<string, bool> Logger;
         public Func<string, bool> saveConfig;
@@ -93,7 +105,10 @@ namespace Lilly_s_Beyond_Limits
                     {
                         bool passed = Beyondinstance.setSliderLimit(Parts);
                         if (passed)
+                        {
                             __instance.New_ChatMessage("Slider Size Changed");
+                            bool pass = Beyondinstance.saveConfig("");
+                        }
                         else
                             __instance.New_ChatMessage("Slider Size Change Failed");
                         return false;
@@ -108,6 +123,12 @@ namespace Lilly_s_Beyond_Limits
                         {
                             ChatBehaviour._current.New_ChatMessage("Failed To Save Config Check Console For Info");
                         }
+
+                        return false;
+                    }
+                    else if (temp.StartsWith("/blhelp"))
+                    {
+                        ChatBehaviour._current.New_ChatMessage($"Commands:\n\nSets Size To Number\n/Size [Body Part] [Number] \n\nIncreases Size By Number\n/Grow [Body Part] [Number]\n\nToggle Infinate Zoom And Camera Collision\n/Camera\n\nSet Slider Limits\n/Slider [Body Part] [Min Number] [Max Number]");
 
                         return false;
                     }
@@ -138,7 +159,7 @@ namespace Lilly_s_Beyond_Limits
             {
                 part = 1;
             }
-            else if (Parts[1] == "scale")
+            else if (Parts[1] == "scale" || Parts[1] == "size")
             {
                 part = 2;
             }
@@ -154,11 +175,11 @@ namespace Lilly_s_Beyond_Limits
             {
                 part = 5;
             }
-            else if (Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom")
+            else if (Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom" || Parts[1] == "rear" || Parts[1] == "rump")
             {
                 part = 6;
             }
-            else if (Parts[1] == "belly" || Parts[1] == "stomach")
+            else if (Parts[1] == "belly" || Parts[1] == "stomach" || Parts[1] == "gut")
             {
                 part = 7;
             }
@@ -166,7 +187,7 @@ namespace Lilly_s_Beyond_Limits
             {
                 part = 8;
             }
-            else if (Parts[1] == "voice" || Parts[1] == "Pitch")
+            else if (Parts[1] == "voice" || Parts[1] == "pitch")
             {
                 part = 9;
             }
@@ -174,7 +195,7 @@ namespace Lilly_s_Beyond_Limits
             {
                 part = 10;
             }
-            else if (Parts[1] == "arms")
+            else if (Parts[1] == "arms" || Parts[1] == "arm")
             {
                 part = 11;
             }
@@ -364,51 +385,61 @@ namespace Lilly_s_Beyond_Limits
             if (Parts[1] == "boobs" || Parts[1] == "tits" || Parts[1] == "boob" || Parts[1] == "tit" || Parts[1] == "breast" || Parts[1] == "breasts")
             {
                 param._boobRange = value;
+                _boobRange = value;
                 return true;
             }
             else if (Parts[1] == "height")
             {
                 param._heightRange = value;
+                _heightRange = value;
                 return true;
             }
             else if (Parts[1] == "head")
             {
                 param._headWidthRange = value;
+                _headWidthRange = value;
                 return true;
             }
             else if (Parts[1] == "width")
             {
                 param._widthRange = value;
+                _widthRange = value;
                 return true;
             }
             else if (Parts[1] == "butt" || Parts[1] == "ass" || Parts[1] == "bottom")
             {
                 param._bottomRange = value;
+                _bottomRange = value;
                 return true;
             }
             else if (Parts[1] == "belly" || Parts[1] == "stomach")
             {
                 param._bellyRange = value;
+                _bellyRange = value;
                 return true;
             }
             else if (Parts[1] == "muzzle" || Parts[1] == "snout" || Parts[1] == "nose")
             {
                 param._headModRange = value;
+                _headModRange = value;
                 return true;
             }
             else if (Parts[1] == "voice" || Parts[1] == "Pitch")
             {
                 param._pitchRange = value;
+                _pitchRange = value;
                 return true;
             }
             else if (Parts[1] == "torso" || Parts[1] == "chest")
             {
                 param._torsoRange = value;
+                _torsoRange = value;
                 return true;
             }
             else if (Parts[1] == "arms")
             {
                 param._armRange = value;
+                _armRange = value;
                 return true;
             }
             return false;
@@ -459,6 +490,7 @@ namespace Lilly_s_Beyond_Limits
 
                         BeyondCore.Beyondinstance.playerVis.Cmd_SendNew_PlayerAppearanceStruct(playerapp);
                         BeyondCore.Beyondinstance.fix = true;
+                        ChatBehaviour._current.New_ChatMessage("Type /BLHelp For Commands");
                     }
                 }
                 catch (Exception e)
@@ -575,8 +607,21 @@ namespace Lilly_s_Beyond_Limits
                 {
                     if (!__instance.isLocalPlayer)
                         return;
-                    var param = __instance._playerRaceModel._scriptablePlayerRace._raceDisplayParams;
-                    BeyondCore.Beyondinstance.playerVis = __instance;
+                    CharacterParamsGroup param = __instance._playerRaceModel._scriptablePlayerRace._raceDisplayParams;
+
+
+                    /*param._headWidthRange = Beyondinstance._headWidthRange;
+                    param._headModRange = Beyondinstance._headModRange;
+                    param._heightRange = Beyondinstance._heightRange;
+                    param._widthRange = Beyondinstance._widthRange;
+                    param._torsoRange = Beyondinstance._torsoRange;
+                    param._boobRange = Beyondinstance._boobRange;
+                    param._armRange = Beyondinstance._armRange;
+                    param._bellyRange = Beyondinstance._bellyRange;
+                    param._bottomRange = Beyondinstance._bottomRange;
+                    param._pitchRange = Beyondinstance._pitchRange;*/
+
+            BeyondCore.Beyondinstance.playerVis = __instance;
                 }
                 catch (Exception e)
                 {
@@ -642,6 +687,26 @@ namespace Lilly_s_Beyond_Limits
                 CameraCollision camCol = CameraCollision._current;
                 camCol.maxDistance = BeyondCore.Beyondinstance.camDis;
                 __result = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(CharacterCreationManager), "SelectRace")]
+        public static class setSliders
+        {
+            [HarmonyPostfix]
+            private static void Postfix(ref CharacterCreationManager __instance, ref int _i)
+            {
+                CharacterParamsGroup param = __instance._raceDisplayModels[_i]._scriptablePlayerRace._raceDisplayParams;
+                param._headWidthRange = Beyondinstance._headWidthRange;
+                param._headModRange = Beyondinstance._headModRange;
+                param._heightRange = Beyondinstance._heightRange;
+                param._widthRange = Beyondinstance._widthRange;
+                param._torsoRange = Beyondinstance._torsoRange;
+                param._boobRange = Beyondinstance._boobRange;
+                param._armRange = Beyondinstance._armRange;
+                param._bellyRange = Beyondinstance._bellyRange;
+                param._bottomRange = Beyondinstance._bottomRange;
+                param._pitchRange = Beyondinstance._pitchRange;
             }
         }
 
