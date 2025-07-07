@@ -1,7 +1,7 @@
 ﻿using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.MelonLoad), "Lilly's Beyond Limits", "3.0.7", "Lilly", null)]
+[assembly: MelonInfo(typeof(Lilly_s_Beyond_Limits.MelonLoad), "Lilly's Beyond Limits", "3.0.8", "Lilly", null)]
 [assembly: MelonGame("KisSoft", "ATLYSS")]
 [assembly: MelonOptionalDependencies("BepInEx")]
 

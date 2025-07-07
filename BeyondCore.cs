@@ -79,7 +79,7 @@ namespace Lilly_s_Beyond_Limits
                 {
                     string temp;
                     temp = _message.ToLower();
-                    Regex.Replace(temp, "<.*?>", "");
+                    temp = Regex.Replace(temp, "<.*?>", "");
                     //Beyondinstance.Logger(temp);
                     string[] Parts;
                     Parts = temp.Split(" ");
@@ -630,7 +630,7 @@ namespace Lilly_s_Beyond_Limits
             }
         }
 
-        [HarmonyPatch(typeof(SettingsManager), "Load_SettingsData")]
+        /*[HarmonyPatch(typeof(SettingsManager), "Load_SettingsData")]
         public static class fixSettings
         {
             [HarmonyPostfix]
@@ -639,13 +639,14 @@ namespace Lilly_s_Beyond_Limits
                 try
                 {
                     __instance._limitProportionsToggle.isOn = false;
+                    __instance._
                 }
                 catch (Exception e)
                 {
                     //MelonLogger.Msg(e);
                 }
             }
-        }
+        }*/
 
         public float camDis;
         public float defaultcamDis;

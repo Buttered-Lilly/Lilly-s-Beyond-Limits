@@ -6,7 +6,7 @@ using BepInEx.Configuration;
 
 namespace Lilly_s_Beyond_Limits
 {
-    [BepInPlugin("0a26c5bd-f173-47f8-8f50-006dd6806ce6", "Lilly's Beyond Limits", "3.0.7")]
+    [BepInPlugin("0a26c5bd-f173-47f8-8f50-006dd6806ce6", "Lilly's Beyond Limits", "3.0.8")]
     public class Bepin : BaseUnityPlugin
     {
         private ConfigEntry<bool> cameraCol;
@@ -25,7 +25,7 @@ namespace Lilly_s_Beyond_Limits
 
         private void Awake()
         {
-            cameraCol = Config.Bind("General", "CameralCollision", false, "Toggles Camera Colision and Infinite Zoom");
+            cameraCol = Config.Bind("General", "CameralCollision", true, "Toggles Camera Colision and Infinite Zoom");
             _headWidthRange = Config.Bind("General", "SliderHeadWidth", new Vector2(0.95f, 1.15f), "Sets Sliider Limits For Head Width");
             _headModRange = Config.Bind("General", "SliderMuzzle", new Vector2(0f, 100f), "Sets Sliider Limits For Muzzle");
             _heightRange = Config.Bind("General", "SliderHeight", new Vector2(0.95f, 1.055f), "Sets Sliider Limits For Height");
